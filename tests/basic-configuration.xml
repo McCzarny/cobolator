@@ -1,0 +1,27 @@
+<configuration>
+    <salaryHourly>100</salaryHourly>
+    <currency>PLN</currency>
+    <vatRatePrecentage>23</vatRatePrecentage>
+    <from>
+        <business>
+            <name>Fromas Fromson</name>
+            <street>Fomstreet 123</street>
+            <city>Fomcity</city>
+            <postalCode>12-345</postalCode>
+            <NIP>1234567890</NIP>
+        </business>
+    </from>
+    <to>
+        <business>
+            <name>Tomas Tomson</name>
+            <street>Totreet 123</street>
+            <city>Tocity</city>
+            <postalCode>67-890</postalCode>
+            <NIP>0987654321</NIP>
+        </business>
+    </to>
+    <payment>
+        <deadlineDays>14</deadlineDays>
+        <accountNumber>12345678901234567890123456</accountNumber>
+    </payment>
+</configuration>
