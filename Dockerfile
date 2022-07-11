@@ -1,6 +1,6 @@
 FROM olegkunitsyn/gnucobol:3.1-dev
 
-ADD  ../src/ /src
+ADD  ./src/ /src
 
 RUN cd /src && cobc -x -free -o cobolator ./cbl/*.cobol
 
