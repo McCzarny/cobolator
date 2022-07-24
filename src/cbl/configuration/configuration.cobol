@@ -26,14 +26,17 @@ IDENTIFICATION DIVISION.
            05  WS-VAT COMPUTATIONAL PIC 99 VALUE 0.
            05  WS-PAYMENT-DEADLINE COMPUTATIONAL PIC 99 VALUE 0.
            05  WS-ACCOUNT-NUMBER PIC 9(26).
-    01  WS-BUSINESS.
+    01  WS-BUSINESS OCCURS 25 TIMES INDEXED BY IDX-1.
            05 BUSINESS-NAME        PIC A(80).
            05 BUSINESS-STREET      PIC A(80).
            05 BUSINESS-CITY        PIC X(30).
            05 BUSINESS-POSTAL-CODE PIC A(6).
            05 BUSINESS-NIP         PIC 9(10).
+    01  WS-INDEX-FROM COMPUTATIONAL PIC 9 VALUE 1.
+    01  WS-INDEX-TO   COMPUTATIONAL PIC 9 VALUE 2.
+    01  WS-DISPLAY-INDEX COMPUTATIONAL PIC 9 VALUE 0.
     01 WS-CONFIG-ENTRY-FILE.
-       05 WS-CONFIG-KEY PIC A(8).
+       05 WS-CONFIG-KEY PIC A(6).
        05 WS-CONFIG-DELIMITER PIC A(1).
        05 WS-CONFIG-VALUE PIC X(64).
     01 WS-EOF PIC A(1). 
@@ -53,33 +56,58 @@ IDENTIFICATION DIVISION.
                IF NOT WS-EOF = 'Y' THEN
                    DISPLAY "KEY: " WS-CONFIG-KEY " VALUE: " WS-CONFIG-VALUE
                     EVALUATE WS-CONFIG-KEY
-                    WHEN 'SARYHRLY'
+                    WHEN 'SARYHR'
                        MOVE WS-CONFIG-VALUE TO WS-HOURLY-SALARY
-                    WHEN 'CURRENCY'
+                    WHEN 'CURNCY'
                        MOVE WS-CONFIG-VALUE TO WS-CURRENCY
-                    WHEN 'VATRATE_'
+                    WHEN 'VATRAT'
                        MOVE WS-CONFIG-VALUE TO WS-VAT
-                    WHEN 'PAYDEDLN'
+                    WHEN 'PYDEDN'
                        MOVE WS-CONFIG-VALUE TO WS-PAYMENT-DEADLINE
-                    WHEN 'ACCNUMBR'
+                    WHEN 'ACCNBR'
                        MOVE WS-CONFIG-VALUE TO WS-ACCOUNT-NUMBER
-                    WHEN 'FROMNAME'
-                       MOVE WS-CONFIG-VALUE TO BUSINESS-NAME
-                    WHEN 'FROMSTRT'
-                       MOVE WS-CONFIG-VALUE TO BUSINESS-STREET
-                    WHEN 'FROMCITY'
-                       MOVE WS-CONFIG-VALUE TO BUSINESS-CITY
-                    WHEN 'FROMPCOD'
-                       MOVE WS-CONFIG-VALUE TO BUSINESS-POSTAL-CODE
+                    WHEN 'FRNAME'
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-NAME (WS-INDEX-FROM)
+                    WHEN 'FRSTRT'
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-STREET(WS-INDEX-FROM)
+                    WHEN 'FRCITY'
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-CITY(WS-INDEX-FROM)
+                    WHEN 'FRPCOD'
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-POSTAL-CODE(WS-INDEX-FROM)
                     WHEN 'FROMNIPN'
-                       MOVE WS-CONFIG-VALUE TO BUSINESS-NIP
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-NIP(WS-INDEX-FROM)
+                    WHEN 'TONAME'
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-NAME (WS-INDEX-TO)
+                    WHEN 'TOSTRT'
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-STREET(WS-INDEX-TO)
+                    WHEN 'TOCITY'
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-CITY(WS-INDEX-TO)
+                    WHEN 'TOPCOD'
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-POSTAL-CODE(WS-INDEX-TO)
+                    WHEN 'TONIPN'
+                       MOVE WS-CONFIG-VALUE TO BUSINESS-NIP(WS-INDEX-TO)
                     END-EVALUATE
                END-IF
              END-PERFORM.
                DISPLAY "GENERAL: " WS-GENERAL
-               DISPLAY "FROM BUSINESS: " WS-BUSINESS                                    
+
+               DISPLAY "---FROM BUSINESS---".
+               MOVE WS-INDEX-FROM TO WS-DISPLAY-INDEX.
+               PERFORM DISPLAY-BUSINESS.
+
+               DISPLAY "---TO BUSINESS---".
+               MOVE WS-INDEX-TO TO WS-DISPLAY-INDEX.
+               PERFORM DISPLAY-BUSINESS.
+               DISPLAY "-----------------".
           CLOSE CONFIG-FILE.
+       READ-CONFIG-FILE-EXIT. EXIT.
+       EXIT PROGRAM.
 
-
-       EXIT.
+       DISPLAY-BUSINESS  SECTION.
+           DISPLAY "BUSINESS NAME: " BUSINESS-NAME(WS-DISPLAY-INDEX).
+           DISPLAY "BUSINESS STREET: " BUSINESS-STREET(WS-DISPLAY-INDEX).
+           DISPLAY "BUSINESS CITY: " BUSINESS-CITY(WS-DISPLAY-INDEX).
+           DISPLAY "BUSINESS POSTAL CODE: " BUSINESS-POSTAL-CODE(WS-DISPLAY-INDEX).
+           DISPLAY "BUSINESS NIP: " BUSINESS-NIP(WS-DISPLAY-INDEX).
+       DISPLAY-BUSINESS-EXIT. EXIT.
       

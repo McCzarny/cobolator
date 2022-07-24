@@ -12,6 +12,7 @@ PROCEDURE DIVISION.
     DISPLAY 'Hello, I am Cobolator!'
     DISPLAY 'Command line args: ' WS-COMMAND-LINE
     CALL "PARSECONFIG" USING WS-COMMAND-LINE 
+    DISPLAY 'End of parsing'
 
     STOP RUN.
     
